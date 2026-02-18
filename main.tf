@@ -18,9 +18,10 @@ provider "azurerm" {
 
 
 resource "azurerm_resource_group" "app" {
-  name     = "terrarg-app-dev"
+  name     = "terragitrgweb-dev"
   location = "eastus"
 }
+
 
 
 resource "azurerm_virtual_network" "packvnet" {
