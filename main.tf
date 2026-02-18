@@ -65,6 +65,13 @@ resource "azurerm_network_security_group" "packsg" {
   }
 }
 
+resource "azurerm_public_ip" "main" {
+  name                = "packpip"
+  location            = azurerm_resource_group.app.location
+  resource_group_name = azurerm_resource_group.app.name
+  allocation_method   = "Dynamic"
+}
+
 resource "azurerm_network_interface" "app" {
   count               = 3
   name                = "nic-app-${count.index}"
@@ -75,6 +82,7 @@ resource "azurerm_network_interface" "app" {
     name                          = "internal"
     subnet_id                     = azurerm_subnet.packsub.id
     private_ip_address_allocation = "Dynamic"
+    public_ip_address_id          = azurerm_public_ip.main.id
   }
 }
 
@@ -83,15 +91,18 @@ resource "azurerm_linux_virtual_machine" "app" {
   name                = "vm-app-${count.index}"
   location            = azurerm_resource_group.app.location
   resource_group_name = azurerm_resource_group.app.name
-  size                =  "Standard_B4as_v2"
+  size                =  "Standard_D2s_v3"
   admin_username      = "adminuser"
+  admin_password      = "Ashokgani@123"
 
   network_interface_ids = [azurerm_network_interface.app[count.index].id]
-
+  
+  /*
   admin_ssh_key {
     username   = "adminuser"
     public_key = file("~/.ssh/id_rsa.pub")
   }
+*/
 
   os_disk {
     caching              = "ReadWrite"
