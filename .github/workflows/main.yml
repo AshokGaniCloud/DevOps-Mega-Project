@@ -22,6 +22,18 @@ jobs:
    steps:
      - name: Checkout Self
        uses: actions/checkout@v4
+     - name: SetUp NodeJs
+       uses: actions/setup-node@v4
+       with:
+         node-version: 20
+     - name: Run Node Ci
+       run: npm ci
+     - name: Run Node Install
+       run: npm install
+     - name: Run Node test
+       run: npm test
+     - name: Run Node Build
+       run: npm run build
 
      - name: Setup Terraform 
        uses: hashicorp/setup-terraform@v3
