@@ -1,0 +1,32 @@
+name: Deploy Infra to Azure Cloud
+
+on: 
+  push:
+    branches:
+      - main
+
+jobs:
+  build a Infra:
+   runs-on: ubuntu-latest
+
+   steps:
+     - name: Checkout Slef
+       uses: actions/checkout@v4
+
+     - name: Setup Terraform 
+       uses: hashicorp/setup-terraform@v3
+
+     - name: Deploy Cloud Infra to Azure Cloud
+       env:
+          ARM_CLIENT_ID: ${{ secrets.AZURE_CLIENT_ID }}
+          ARM_CLIENT_SECRET: ${{ secrets.AZURE_CLIENT_SECRET }}
+          ARM_SUBSCRIPTION_ID: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
+          ARM_TENANT_ID: ${{ secrets.AZURE_TENANT_ID }}
+      run: |
+        terraform init
+        terraform validate
+        terraform fmt
+        terraform plan
+        terraform apply --auto-approve
+        terraform show
+        terraform destroy --auto-approve
