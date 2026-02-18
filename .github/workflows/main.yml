@@ -1,5 +1,8 @@
 name: Deploy Infra to Azure Cloud
 
+env:
+  AZURE_WEBAPP_NAME: 'nodejswebapp'
+
 on: 
   push:
     branches:
@@ -7,6 +10,7 @@ on:
 
 permissions:
   contents: read
+  packages: write
 
 
 jobs:
@@ -22,6 +26,8 @@ jobs:
    steps:
      - name: Checkout Self
        uses: actions/checkout@v4
+       with:
+         fetch-depth: 0
      - name: SetUp NodeJs
        uses: actions/setup-node@v4
        with:
@@ -63,7 +69,13 @@ jobs:
             -Dsonar.host.url=http://20.109.40.150:9000 \
             -Dsonar.login=${{ secrets.SONAR_TOKEN }}
     
-
+     - name: Create source code zip archive (excluding .gitignore files)
+       run: git archive --format=zip --output=source.zip HEAD
+     - name: Upload zip artifact
+       uses: actions/upload-artifact@v4
+       with:
+         name: project-source-code
+         path: source.zip
      - name: Setup Terraform 
        uses: hashicorp/setup-terraform@v3
        #with:
@@ -85,3 +97,25 @@ jobs:
         terraform apply --auto-approve
         terraform show
         terraform destroy --auto-approve
+
+ deploy:
+    permissions:
+      contents: read
+    runs-on: ubuntu-latest
+    needs: build-Infra
+    environment: 
+      name: production
+      url:  ${{ steps.deploy-to-webapp.outputs.webapp-url }}
+      
+    steps:
+      - name: Download Artifact
+        uses: actions/download-artifact@v4
+        with:
+            name: project-source-code
+      - name: Deploy to Azure Web App
+        id: deploy-to-webapp
+        uses: azure/webapps-deploy@v3.0.6
+        with:
+          app-name: ${{ env.AZURE_WEBAPP_NAME }}
+          publish-profile: ${{ secrets.AZURE_WEBAPP_PUBLISH_PROFILE }}
+          package: './source.zip'
