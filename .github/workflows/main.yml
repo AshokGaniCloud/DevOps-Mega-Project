@@ -32,7 +32,24 @@ jobs:
        run: npm install -f frontend/
   
      - name: Run Node Build
-       run: npm build 
+       run: npm run build 
+     - name: Cache SonarQube packages
+       uses: actions/cache@v4
+       with:
+          path: ~/.sonar/cache
+          key: ${{ runner.os }}-sonar
+          restore-keys: ${{ runner.os }}-sonar
+     - name: Cache Maven packages
+       uses: actions/cache@v4
+       with:
+          path: ~/.m2
+          key: ${{ runner.os }}-m2-${{ hashFiles('**/pom.xml') }}
+          restore-keys: ${{ runner.os }}-m2
+     - name: Build and analyze
+       env:
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+          SONAR_HOST_URL: ${{ secrets.SONAR_HOST_URL }}
+       run: mvn -B verify org.sonarsource.scanner.maven:sonar-maven-plugin:sonar -Dsonar.projectKey=MavenApp -Dsonar.projectName='MavenApp'
 
      - name: Setup Terraform 
        uses: hashicorp/setup-terraform@v3
