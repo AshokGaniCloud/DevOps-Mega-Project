@@ -4,6 +4,7 @@
   },
   "scripts": {
     "start-frontend": "cd frontend && npm run dev",
+    "sonar": "sonar-scanner",
     "start-backend": "cd backend && npm start",
     "start": "concurrently -n \"FRONTEND,BACKEND\" -c \"bgBlue,bgYellow\" -p \"[{name}]\" \"npm run start-frontend\" \"npm run start-backend\"",
     "install-frontend": "cd frontend && npm i",
