@@ -18,7 +18,7 @@ provider "azurerm" {
 
 
 resource "azurerm_resource_group" "app" {
-  name     = "terragithubrgappdev"
+  name     = "terraazgithubrgwebprod"
   location = "eastus"
 }
 
@@ -97,7 +97,7 @@ resource "azurerm_linux_virtual_machine" "app" {
   size                =  "Standard_D2s_v3"
   admin_username      = "adminuser"
   admin_password      = "Ashokgani@123"
-
+  disable_password_authentication = false
   network_interface_ids = [azurerm_network_interface.app[count.index].id]
   
   /*
