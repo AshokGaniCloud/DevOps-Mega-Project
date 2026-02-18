@@ -30,8 +30,8 @@ jobs:
        run: npm ci
      - name: Run Node Install
        run: npm install -f frontend/
-  
-  
+     - name: Run Test
+       run: npm test -- --coverage
      - name: Cache SonarQube packages
        uses: actions/cache@v4
        with:
@@ -48,7 +48,12 @@ jobs:
        env:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
           SONAR_HOST_URL: ${{ secrets.SONAR_HOST_URL }}
-       run: mvn -B verify org.sonarsource.scanner.maven:sonar-maven-plugin:sonar -Dsonar.projectKey=MavenApp -Dsonar.projectName='MavenApp'
+       run: |
+          npx sonar-scanner \
+            -Dsonar.projectKey=MavenApp \
+            -Dsonar.host.url=http://20.109.40.150:9000 \
+            -Dsonar.login=${{ secrets.SONAR_TOKEN }}
+    
 
      - name: Setup Terraform 
        uses: hashicorp/setup-terraform@v3
