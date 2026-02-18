@@ -29,10 +29,10 @@ jobs:
      - name: Run Node Ci
        run: npm ci
      - name: Run Node Install
-       run: npm install
+       run: npm install -f frontend/
   
      - name: Run Node Build
-       run: npm run build
+       run: npm run build -f frontend/
 
      - name: Setup Terraform 
        uses: hashicorp/setup-terraform@v3
