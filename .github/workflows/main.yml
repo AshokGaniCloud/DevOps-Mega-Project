@@ -32,7 +32,7 @@ jobs:
        run: npm install -f frontend/
   
      - name: Run Node Build
-       run: npm run build -f frontend/
+       run: npm build -f frontend/
 
      - name: Setup Terraform 
        uses: hashicorp/setup-terraform@v3
