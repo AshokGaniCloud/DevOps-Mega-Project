@@ -18,7 +18,7 @@ provider "azurerm" {
 
 
 resource "azurerm_resource_group" "app" {
-  name     = "terragitrgweb-dev"
+  name     = "terragithubrgappdev"
   location = "eastus"
 }
 
@@ -66,12 +66,14 @@ resource "azurerm_network_security_group" "packsg" {
   }
 }
 
+/*
 resource "azurerm_public_ip" "main" {
   name                = "packpip"
   location            = azurerm_resource_group.app.location
   resource_group_name = azurerm_resource_group.app.name
   allocation_method   = "Static"
 }
+*/
 
 resource "azurerm_network_interface" "app" {
   count               = 3
@@ -83,7 +85,7 @@ resource "azurerm_network_interface" "app" {
     name                          = "internal"
     subnet_id                     = azurerm_subnet.packsub.id
     private_ip_address_allocation = "Dynamic"
-    public_ip_address_id          = azurerm_public_ip.main.id
+    #public_ip_address_id          = azurerm_public_ip.main.id
   }
 }
 
