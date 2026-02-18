@@ -69,7 +69,7 @@ resource "azurerm_public_ip" "main" {
   name                = "packpip"
   location            = azurerm_resource_group.app.location
   resource_group_name = azurerm_resource_group.app.name
-  allocation_method   = "Dynamic"
+  allocation_method   = "Static"
 }
 
 resource "azurerm_network_interface" "app" {
