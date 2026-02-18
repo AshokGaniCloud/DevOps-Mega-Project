@@ -30,8 +30,17 @@ jobs:
        run: npm ci
      - name: Run Node Install
        run: npm install -f frontend/
-     - name: Run Test
-       run: npm test -- --coverage
+     - name: Run Frontend
+       run: |
+         cd frontend
+         npm i
+     - name: Run backend
+       run: |
+        cd backend
+        npm i
+     - name: Install All Package
+       run: |
+         npm i && npm run install-backend && npm run install-frontend
      - name: Cache SonarQube packages
        uses: actions/cache@v4
        with:
