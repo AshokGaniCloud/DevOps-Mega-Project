@@ -6,11 +6,11 @@ on:
       - main
 
 jobs:
-  build a Infra:
+ build-Infra:
    runs-on: ubuntu-latest
 
    steps:
-     - name: Checkout Slef
+     - name: Checkout Self
        uses: actions/checkout@v4
 
      - name: Setup Terraform 
@@ -22,7 +22,7 @@ jobs:
           ARM_CLIENT_SECRET: ${{ secrets.AZURE_CLIENT_SECRET }}
           ARM_SUBSCRIPTION_ID: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
           ARM_TENANT_ID: ${{ secrets.AZURE_TENANT_ID }}
-      run: |
+       run: |
         terraform init
         terraform validate
         terraform fmt
