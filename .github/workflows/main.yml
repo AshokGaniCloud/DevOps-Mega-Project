@@ -5,18 +5,31 @@ on:
     branches:
       - main
 
+permissions:
+  contents: read
+
+
 jobs:
  build-Infra:
    runs-on: ubuntu-latest
-
+   environment: production
+   
+     # Use the Bash shell regardless whether the GitHub Actions runner is ubuntu-latest, macos-latest, or windows-latest
+   defaults:
+      run:
+        shell: bash
+   
    steps:
      - name: Checkout Self
        uses: actions/checkout@v4
 
      - name: Setup Terraform 
        uses: hashicorp/setup-terraform@v3
+       #with:
+         #cli_config_credentials_token: ${{ secrets.TF_API_TOKEN }}
 
      - name: Deploy Cloud Infra to Azure Cloud
+       if: github.ref == 'refs/heads/"main"' && github.event_name == 'push'
        env:
           ARM_CLIENT_ID: ${{ secrets.AZURE_CLIENT_ID }}
           ARM_CLIENT_SECRET: ${{ secrets.AZURE_CLIENT_SECRET }}
@@ -26,7 +39,7 @@ jobs:
         terraform init -upgrade
         terraform destroy --auto-approve
         terraform validate
-        terraform fmt
+        terraform fmt -check
         terraform plan
         terraform apply --auto-approve
         terraform show
